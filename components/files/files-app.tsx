@@ -18,59 +18,109 @@ export function FilesApp() {
   const [selectedFile, setSelectedFile] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<"list" | "grid">("grid")
 
+  const folderContents: Record<string, FileItem[]> = {
+    root: [
+      {
+        id: "1",
+        name: "My Photos",
+        type: "folder",
+        dateModified: "2024-01-15",
+      },
+      {
+        id: "2",
+        name: "Daily Notes",
+        type: "folder",
+        dateModified: "2024-01-14",
+      },
+      {
+        id: "3",
+        name: "Camera Roll",
+        type: "folder",
+        dateModified: "2024-01-13",
+      },
+      {
+        id: "4",
+        name: "profile-pic.jpg",
+        type: "image",
+        size: "245 KB",
+        dateModified: "2024-01-12",
+      },
+      {
+        id: "5",
+        name: "streak-goals.txt",
+        type: "document",
+        size: "1.2 KB",
+        dateModified: "2024-01-11",
+        content: "My goal is to maintain a 30-day streak on Snel OS!",
+      },
+    ],
+    "1": [
+      // My Photos folder
+      {
+        id: "photo1",
+        name: "sunset.jpg",
+        type: "image",
+        size: "1.2 MB",
+        dateModified: "2024-01-15",
+      },
+      {
+        id: "photo2",
+        name: "coffee.jpg",
+        type: "image",
+        size: "856 KB",
+        dateModified: "2024-01-14",
+      },
+      {
+        id: "photo3",
+        name: "friends.jpg",
+        type: "image",
+        size: "2.1 MB",
+        dateModified: "2024-01-13",
+      },
+    ],
+    "2": [
+      // Daily Notes folder
+      {
+        id: "note1",
+        name: "Entry #1",
+        type: "note",
+        size: "2.3 KB",
+        dateModified: "2024-01-15",
+        content: "Today was a great day! Started using Snel OS and loving the retro vibes.",
+      },
+      {
+        id: "note2",
+        name: "Entry #2",
+        type: "note",
+        size: "1.8 KB",
+        dateModified: "2024-01-14",
+        content: "Working on maintaining my daily streak. The quest system is really motivating!",
+      },
+    ],
+    "3": [
+      // Camera Roll folder
+      {
+        id: "cam1",
+        name: "IMG_001.jpg",
+        type: "image",
+        size: "1.5 MB",
+        dateModified: "2024-01-15",
+      },
+      {
+        id: "cam2",
+        name: "IMG_002.jpg",
+        type: "image",
+        size: "1.8 MB",
+        dateModified: "2024-01-14",
+      },
+    ],
+  }
+
   useEffect(() => {
-    // Load files from localStorage or create mock files
-    const savedFiles = localStorage.getItem("snel-user-files")
-    if (savedFiles) {
-      setFiles(JSON.parse(savedFiles))
-    } else {
-      const mockFiles: FileItem[] = [
-        {
-          id: "1",
-          name: "My Photos",
-          type: "folder",
-          dateModified: "2024-01-15",
-        },
-        {
-          id: "2",
-          name: "Daily Notes",
-          type: "folder",
-          dateModified: "2024-01-14",
-        },
-        {
-          id: "3",
-          name: "Camera Roll",
-          type: "folder",
-          dateModified: "2024-01-13",
-        },
-        {
-          id: "4",
-          name: "profile-pic.jpg",
-          type: "image",
-          size: "245 KB",
-          dateModified: "2024-01-12",
-        },
-        {
-          id: "5",
-          name: "streak-goals.txt",
-          type: "document",
-          size: "1.2 KB",
-          dateModified: "2024-01-11",
-          content: "My goal is to maintain a 30-day streak on Snel OS!",
-        },
-        {
-          id: "6",
-          name: "ideas.md",
-          type: "note",
-          size: "3.4 KB",
-          dateModified: "2024-01-10",
-          content: "# App Ideas\n\n- Photo sharing with friends\n- Daily journal prompts\n- Streak challenges",
-        },
-      ]
-      setFiles(mockFiles)
-      localStorage.setItem("snel-user-files", JSON.stringify(mockFiles))
-    }
-  }, [])
+    const currentFiles = folderContents[currentFolder] || []
+    setFiles(currentFiles)
+    setSelectedFile(null) // Clear selection when changing folders
+  }, [currentFolder])
 
   const getFileIcon = (type: string) => {
     switch (type) {
@@ -95,6 +145,12 @@ export function FilesApp() {
     }
   }
 
+  const goBack = () => {
+    setCurrentFolder("root")
+  }
+
+  const selectedFileData = files.find((f) => f.id === selectedFile)
+
   const handleDelete = (fileId: string) => {
     if (confirm("Are you sure you want to delete this file?")) {
       const updatedFiles = files.filter((f) => f.id !== fileId)
@@ -104,13 +160,28 @@ export function FilesApp() {
     }
   }
 
-  const selectedFileData = files.find((f) => f.id === selectedFile)
-
   return (
     <div className="h-full bg-gray-200 p-4">
       <div className="pixel-border bg-white h-full p-4 flex flex-col">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold text-black">My Files</h2>
+          <div className="flex items-center gap-2">
+            {currentFolder !== "root" && (
+              <Button onClick={goBack} className="text-xs">
+                ← Back
+              </Button>
+            )}
+            <h2 className="text-lg font-bold text-black">
+              {currentFolder === "root"
+                ? "My Files"
+                : currentFolder === "1"
+                  ? "My Photos"
+                  : currentFolder === "2"
+                    ? "Daily Notes"
+                    : currentFolder === "3"
+                      ? "Camera Roll"
+                      : "My Files"}
+            </h2>
+          </div>
           <div className="flex gap-2">
             <Button onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")} className="text-xs">
               {viewMode === "grid" ? "List" : "Grid"}

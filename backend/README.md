@@ -89,19 +89,19 @@ A comprehensive TypeScript backend for Snel OS, built with Fastify, Prisma, Post
 ### Installation
 
 1. **Clone and install dependencies**
-```bash
+\`\`\`bash
 cd backend
 npm install
-```
+\`\`\`
 
 2. **Environment setup**
-```bash
+\`\`\`bash
 cp .env.example .env
 # Edit .env with your configuration
-```
+\`\`\`
 
 3. **Database setup**
-```bash
+\`\`\`bash
 # Generate Prisma client
 npm run db:generate
 
@@ -110,12 +110,12 @@ npm run db:migrate
 
 # Seed database with sample data
 npm run db:seed
-```
+\`\`\`
 
 4. **Start development server**
-```bash
+\`\`\`bash
 npm run dev
-```
+\`\`\`
 
 ## ⚙️ Environment Variables
 
@@ -145,7 +145,7 @@ See `.env.example` for all required environment variables:
 
 ## 🧪 Testing
 
-```bash
+\`\`\`bash
 # Run all tests
 npm test
 
@@ -154,7 +154,7 @@ npm run test:watch
 
 # Run specific test suite
 npm test -- posts.test.ts
-```
+\`\`\`
 
 ### Test Coverage
 - Credits system (charging, daily free status)
@@ -214,7 +214,7 @@ npm test -- posts.test.ts
 ## 📝 API Usage Examples
 
 ### Authentication Flow
-```bash
+\`\`\`bash
 # 1. User completes Farcaster OAuth, get code
 # 2. Exchange code for session
 curl -X POST http://localhost:3001/auth/fc/callback \
@@ -222,21 +222,21 @@ curl -X POST http://localhost:3001/auth/fc/callback \
   -d '{"code":"oauth_code_here"}'
 
 # Response: {"token":"jwt_token","user":{...}}
-```
+\`\`\`
 
 ### Create Post
-```bash
+\`\`\`bash
 curl -X POST http://localhost:3001/posts \
   -H "Authorization: Bearer jwt_token" \
   -F "image=@photo.jpg" \
   -F "promptTag=nature"
-```
+\`\`\`
 
 ### WebSocket Chat
-```javascript
+\`\`\`javascript
 const ws = new WebSocket('ws://localhost:3001/chat?room=general&token=jwt_token');
 ws.send(JSON.stringify({type: 'message', text: 'Hello!'}));
-```
+\`\`\`
 
 ## 🤝 Contributing
 

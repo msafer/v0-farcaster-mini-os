@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { StatusBar } from "@/components/pixel95/status-bar"
 import { DesktopIcon } from "@/components/pixel95/desktop-icon"
 import { ContextMenu } from "@/components/pixel95/context-menu"
@@ -47,6 +47,19 @@ export default function SnelOS() {
   }>({ isOpen: false, position: { x: 0, y: 0 } })
   const [userRole] = useState<"admin" | "user">("user") // Mock user role
   const [walletType, setWalletType] = useState<"external" | "farcaster">("external")
+
+  useEffect(() => {
+    const handleOpenApp = (event: CustomEvent) => {
+      const appId = event.detail
+      setCurrentApp(appId)
+    }
+
+    window.addEventListener("openApp", handleOpenApp as EventListener)
+
+    return () => {
+      window.removeEventListener("openApp", handleOpenApp as EventListener)
+    }
+  }, [])
 
   const handleAppClick = (appId: string) => {
     setCurrentApp(appId)
