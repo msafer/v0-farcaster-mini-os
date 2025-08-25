@@ -15,6 +15,7 @@ import { SettingsApp } from "@/components/settings/settings-app"
 import { TreasuryApp } from "@/components/treasury/treasury-app"
 import { UserProfile } from "@/components/user-profile"
 import { FilesApp } from "@/components/files/files-app"
+import { SnelOSConnectAuthKit } from "@/components/snel-os-connect-authkit"
 
 const apps = [
   { id: "camera", name: "Camera", icon: "camera" },
@@ -159,18 +160,22 @@ export default function SnelOS() {
                 </div>
 
                 <div className="text-center space-y-4">
-                  <Button
-                    className="w-full mb-4"
-                    onClick={() => {
-                      const walletTypes = ["MetaMask", "WalletConnect", "Coinbase Wallet"]
-                      const randomWallet = walletTypes[Math.floor(Math.random() * walletTypes.length)]
-                      setTimeout(() => {
-                        alert(`${randomWallet} connected! (Simulated)\n\nAddress: 0x742d...3f8a`)
-                      }, 1000)
-                    }}
-                  >
-                    Connect {walletType === "external" ? "External" : "Farcaster"} Wallet
-                  </Button>
+                  {walletType === "external" ? (
+                    <SnelOSConnectAuthKit />
+                  ) : (
+                    <div className="p-4 pixel-border bg-background">
+                      <h3 className="retro-font mb-2">Farcaster Integration</h3>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Use the Profile app to connect your Farcaster account via AuthKit.
+                      </p>
+                      <Button
+                        onClick={() => handleAppClick("profile")}
+                        className="w-full"
+                      >
+                        Go to Profile
+                      </Button>
+                    </div>
+                  )}
 
                   <p className="text-sm text-muted-foreground">
                     {walletType === "external"

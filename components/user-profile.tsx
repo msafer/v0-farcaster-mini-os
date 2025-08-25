@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { SnelOSConnectAuthKit } from "@/components/snel-os-connect-authkit"
 
 interface UserStats {
   currentStreak: number
@@ -74,6 +75,12 @@ export function UserProfile() {
 
   return (
     <div className="space-y-4">
+      {/* Authentication & Wallet Connection */}
+      <div className="pixel-border bg-secondary p-4">
+        <h3 className="retro-font text-lg mb-3">Connect & Authenticate</h3>
+        <SnelOSConnectAuthKit />
+      </div>
+
       <div className="pixel-border bg-secondary p-4">
         <h3 className="retro-font text-lg mb-3">User Profile</h3>
 

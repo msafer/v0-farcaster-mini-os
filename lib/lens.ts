@@ -272,8 +272,17 @@ export class LensService {
   // Wallet signature verification
   async verifyLensProfileOwnership(address: string, signature: string, message: string): Promise<boolean> {
     try {
-      // This would typically involve verifying the signature matches the address
-      // and that the address owns Lens profiles
+      // Import ethers for signature verification
+      const { ethers } = await import('ethers');
+      
+      // Verify the signature matches the address
+      const recoveredAddress = ethers.utils.verifyMessage(message, signature);
+      if (recoveredAddress.toLowerCase() !== address.toLowerCase()) {
+        console.error('Signature verification failed: address mismatch');
+        return false;
+      }
+
+      // Check if the address owns Lens profiles
       const profiles = await this.getProfilesByAddress(address);
       return profiles.length > 0;
     } catch (error) {
