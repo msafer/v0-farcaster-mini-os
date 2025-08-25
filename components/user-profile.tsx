@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-// Temporarily disabled: import { SnelOSConnectAuthKit } from "@/components/snel-os-connect-authkit"
+import { SimpleWalletConnect } from "@/components/simple-wallet-connect"
 
 interface UserStats {
   currentStreak: number
@@ -75,12 +75,10 @@ export function UserProfile() {
 
   return (
     <div className="space-y-4">
-      {/* Authentication & Wallet Connection - Temporarily Disabled */}
+      {/* Authentication & Wallet Connection */}
       <div className="pixel-border bg-secondary p-4">
         <h3 className="retro-font text-lg mb-3">Connect & Authenticate</h3>
-        <p className="text-sm text-muted-foreground">
-          Wallet connection temporarily disabled while fixing UI components.
-        </p>
+        <SimpleWalletConnect />
       </div>
 
       <div className="pixel-border bg-secondary p-4">
