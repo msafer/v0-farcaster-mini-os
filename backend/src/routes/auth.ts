@@ -17,13 +17,12 @@ const lensLinkSchema = z.object({
 export async function authRoutes(fastify: FastifyInstance) {
   const authService = new AuthService(fastify.prisma);
 
-  // Farcaster OAuth callback
+  // Farcaster AuthKit callback
   fastify.post<{
-    Body: AuthCallbackRequest;
+    Body: any;
     Reply: AuthResponse;
   }>('/auth/fc/callback', {
     schema: {
-      body: callbackSchema,
       response: {
         200: {
           type: 'object',
@@ -45,8 +44,8 @@ export async function authRoutes(fastify: FastifyInstance) {
     }
   }, async (request, reply) => {
     try {
-      const { code } = request.body;
-      const authResponse = await authService.handleFarcasterCallback(code);
+      const authData = request.body;
+      const authResponse = await authService.handleFarcasterCallback(authData);
       
       reply.code(200).send(authResponse);
     } catch (error) {

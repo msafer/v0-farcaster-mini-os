@@ -9,6 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@farcaster/auth-kit": "^0.8.1",
     "@fastify/cors": "latest",
     "@fastify/multipart": "latest",
     "@fastify/websocket": "latest",

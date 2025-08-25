@@ -3,6 +3,7 @@ import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { headers } from 'next/headers'
 import Web3ContextProvider from '@/context/web3'
+import AuthKitContextProvider from '@/context/authkit'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -32,7 +33,9 @@ html {
       </head>
       <body>
         <Web3ContextProvider cookies={cookies}>
-          {children}
+          <AuthKitContextProvider>
+            {children}
+          </AuthKitContextProvider>
         </Web3ContextProvider>
       </body>
     </html>

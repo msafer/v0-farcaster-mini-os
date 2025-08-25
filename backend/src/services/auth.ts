@@ -6,10 +6,37 @@ import { AppError, type FarcasterUser, type AuthResponse } from '../types/index.
 export class AuthService {
   constructor(private prisma: PrismaClient) {}
 
-  async handleFarcasterCallback(code: string): Promise<AuthResponse> {
+  async handleFarcasterCallback(authData: any): Promise<AuthResponse> {
     try {
-      // Exchange code for user data (simplified - in real implementation you'd call Farcaster API)
-      const farcasterUser = await this.getFarcasterUserFromCode(code);
+      // AuthKit provides the user data directly
+      const farcasterUser = {
+        fid: authData.fid,
+        username: authData.username,
+        displayName: authData.displayName || authData.username,
+      };
+
+      // Verify using Neynar API if available
+      if (env.NEYNAR_API_KEY) {
+        try {
+          const neynarResponse = await fetch(`https://api.neynar.com/v2/farcaster/user/bulk?fids=${farcasterUser.fid}`, {
+            headers: {
+              'accept': 'application/json',
+              'api_key': env.NEYNAR_API_KEY
+            }
+          });
+
+          if (neynarResponse.ok) {
+            const neynarData = await neynarResponse.json();
+            const neynarUser = neynarData.users?.[0];
+            if (neynarUser) {
+              farcasterUser.username = neynarUser.username;
+              farcasterUser.displayName = neynarUser.display_name || neynarUser.username;
+            }
+          }
+        } catch (neynarError) {
+          console.warn('Neynar verification failed, using AuthKit data:', neynarError);
+        }
+      }
       
       // Find or create user
       let user = await this.prisma.user.findUnique({

@@ -4,22 +4,22 @@ import { BACKEND_URL } from '@/config/services'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { code } = body
-
-    if (!code) {
+    
+    // AuthKit provides fid, username, displayName, etc. directly
+    if (!body.fid || !body.username) {
       return NextResponse.json(
-        { error: 'Authorization code is required' },
+        { error: 'Farcaster user data is required' },
         { status: 400 }
       )
     }
 
-    // Forward the request to the backend
+    // Forward the AuthKit data to the backend
     const response = await fetch(`${BACKEND_URL}/auth/fc/callback`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ code }),
+      body: JSON.stringify(body),
     })
 
     if (!response.ok) {
