@@ -15,7 +15,7 @@ import { SettingsApp } from "@/components/settings/settings-app"
 import { TreasuryApp } from "@/components/treasury/treasury-app"
 import { UserProfile } from "@/components/user-profile"
 import { FilesApp } from "@/components/files/files-app"
-import { SnelOSConnectAuthKit } from "@/components/snel-os-connect-authkit"
+// Temporarily disabled: import { SnelOSConnectAuthKit } from "@/components/snel-os-connect-authkit"
 
 const apps = [
   { id: "camera", name: "Camera", icon: "camera" },
@@ -160,22 +160,14 @@ export default function SnelOS() {
                 </div>
 
                 <div className="text-center space-y-4">
-                  {walletType === "external" ? (
-                    <SnelOSConnectAuthKit />
-                  ) : (
-                    <div className="p-4 pixel-border bg-background">
-                      <h3 className="retro-font mb-2">Farcaster Integration</h3>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        Use the Profile app to connect your Farcaster account via AuthKit.
-                      </p>
-                      <Button
-                        onClick={() => handleAppClick("profile")}
-                        className="w-full"
-                      >
-                        Go to Profile
-                      </Button>
-                    </div>
-                  )}
+                  <Button
+                    className="w-full mb-4"
+                    onClick={() => {
+                      alert("Wallet connection temporarily disabled while fixing UI components")
+                    }}
+                  >
+                    Connect {walletType === "external" ? "External" : "Farcaster"} Wallet (Temp Disabled)
+                  </Button>
 
                   <p className="text-sm text-muted-foreground">
                     {walletType === "external"
