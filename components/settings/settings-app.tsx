@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/pixel95/button"
-import { SimpleWalletConnect } from "@/components/simple-wallet-connect"
+// Wallet connections moved back to Wallet app
 
 export function SettingsApp() {
   const [accentColor, setAccentColor] = useState("#fbbf24")
@@ -85,9 +85,14 @@ export function SettingsApp() {
           </div>
 
           <div>
-            <h3 className="font-semibold mb-2 text-black">Wallet & Authentication</h3>
-            <div className="bg-gray-50 p-3 pixel-border">
-              <SimpleWalletConnect />
+            <h3 className="font-semibold mb-2 text-black">Farcaster Authentication</h3>
+            <div className="space-y-2">
+              <p className="text-sm text-gray-600">
+                Farcaster authentication is handled automatically in the Farcaster mini app.
+              </p>
+              <p className="text-sm text-gray-600">
+                For wallet connections, use the Wallet app.
+              </p>
             </div>
           </div>
         </div>

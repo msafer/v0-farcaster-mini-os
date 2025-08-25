@@ -15,7 +15,7 @@ import { SettingsApp } from "@/components/settings/settings-app"
 import { TreasuryApp } from "@/components/treasury/treasury-app"
 import { UserProfile } from "@/components/user-profile"
 import { FilesApp } from "@/components/files/files-app"
-// Wallet connections moved to Settings app
+import { SimpleWalletConnect } from "@/components/simple-wallet-connect"
 
 const apps = [
   { id: "camera", name: "Camera", icon: "camera" },
@@ -160,18 +160,22 @@ export default function SnelOS() {
                 </div>
 
                 <div className="text-center space-y-4">
-                  <div className="p-4 pixel-border bg-background">
-                    <h3 className="retro-font mb-2">Wallet & Authentication</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Connect wallets and manage authentication in the Settings app.
-                    </p>
-                    <Button
-                      onClick={() => handleAppClick("settings")}
-                      className="w-full"
-                    >
-                      Go to Settings
-                    </Button>
-                  </div>
+                  {walletType === "external" ? (
+                    <SimpleWalletConnect />
+                  ) : (
+                    <div className="p-4 pixel-border bg-background">
+                      <h3 className="retro-font mb-2">Farcaster Integration</h3>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        For Farcaster authentication, visit the Settings app.
+                      </p>
+                      <Button
+                        onClick={() => handleAppClick("settings")}
+                        className="w-full"
+                      >
+                        Go to Settings
+                      </Button>
+                    </div>
+                  )}
 
                   <p className="text-sm text-muted-foreground">
                     {walletType === "external"
