@@ -1,15 +1,19 @@
-import { NeynarAPIClient } from "@neynar/nodejs-sdk";
-import { LensClient, development } from "@lens-protocol/client";
+import { NeynarAPIClient, Configuration } from "@neynar/nodejs-sdk";
 
 // Neynar Configuration
 export const NEYNAR_API_KEY = process.env.NEXT_PUBLIC_NEYNAR_API_KEY || process.env.NEYNAR_API_KEY;
 
-export const neynarClient = NEYNAR_API_KEY ? new NeynarAPIClient(NEYNAR_API_KEY) : null;
+export const neynarClient = NEYNAR_API_KEY ? new NeynarAPIClient(new Configuration({
+  apiKey: NEYNAR_API_KEY,
+  baseOptions: {
+    headers: {
+      "x-neynar-experimental": true,
+    },
+  },
+})) : null;
 
 // Lens Configuration  
-export const lensClient = new LensClient({
-  environment: development, // Use development for testing, change to production later
-});
+export const lensClient = null; // Will be initialized client-side only
 
 // Service URLs
 export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
