@@ -1,0 +1,217 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Updated to retro Windows-95 greyscale design tokens */
+  --background: oklch(1 0 0); /* White background */
+  --foreground: oklch(0.3 0 0); /* Dark grey text */
+  --card: oklch(0.88 0 0); /* Light grey card backgrounds */
+  --card-foreground: oklch(0.3 0 0); /* Dark grey text in cards */
+  --popover: oklch(1 0 0); /* White popover background */
+  --popover-foreground: oklch(0.3 0 0); /* Dark grey text in popovers */
+  --primary: oklch(0.49 0 0); /* Medium grey for window borders */
+  --primary-foreground: oklch(1 0 0); /* White text on primary */
+  --secondary: oklch(0.88 0 0); /* Light grey secondary elements */
+  --secondary-foreground: oklch(0.3 0 0); /* Dark grey text on secondary */
+  --muted: oklch(0.96 0 0); /* Very light grey muted backgrounds */
+  --muted-foreground: oklch(0.49 0 0); /* Medium grey text on muted */
+  --accent: oklch(0.8 0.15 85); /* Bright yellow accent (user-selectable) */
+  --accent-foreground: oklch(0.3 0 0); /* Dark grey text on accent */
+  --destructive: oklch(0.5 0.2 25); /* Red for destructive actions */
+  --destructive-foreground: oklch(1 0 0); /* White text on destructive */
+  --border: oklch(0.69 0 0); /* Medium-light grey borders */
+  --input: oklch(0.88 0 0); /* Light grey input fields */
+  --ring: oklch(0.8 0.15 85); /* Yellow focus ring */
+  --chart-1: oklch(0.49 0 0);
+  --chart-2: oklch(0.69 0 0);
+  --chart-3: oklch(0.88 0 0);
+  --chart-4: oklch(1 0 0);
+  --chart-5: oklch(0.3 0 0);
+  --radius: 0.125rem; /* Minimal rounding for retro feel */
+  --sidebar: oklch(0.88 0 0);
+  --sidebar-foreground: oklch(0.3 0 0);
+  --sidebar-primary: oklch(0.49 0 0);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.8 0.15 85);
+  --sidebar-accent-foreground: oklch(0.3 0 0);
+  --sidebar-border: oklch(0.69 0 0);
+  --sidebar-ring: oklch(0.8 0.15 85);
+}
+
+.dark {
+  /* Updated dark mode tokens for retro consistency */
+  --background: oklch(0.15 0 0); /* Very dark grey background */
+  --foreground: oklch(0.9 0 0); /* Light grey text */
+  --card: oklch(0.2 0 0); /* Dark grey cards */
+  --card-foreground: oklch(0.9 0 0); /* Light grey text in cards */
+  --popover: oklch(0.15 0 0); /* Very dark grey popover */
+  --popover-foreground: oklch(0.9 0 0); /* Light grey text in popovers */
+  --primary: oklch(0.9 0 0); /* Light grey primary in dark mode */
+  --primary-foreground: oklch(0.15 0 0); /* Dark text on primary */
+  --secondary: oklch(0.25 0 0); /* Medium dark grey secondary */
+  --secondary-foreground: oklch(0.9 0 0); /* Light text on secondary */
+  --muted: oklch(0.25 0 0); /* Medium dark grey muted */
+  --muted-foreground: oklch(0.7 0 0); /* Medium light grey text */
+  --accent: oklch(0.8 0.15 85); /* Keep bright yellow accent */
+  --accent-foreground: oklch(0.15 0 0); /* Dark text on accent */
+  --destructive: oklch(0.6 0.2 25); /* Brighter red for dark mode */
+  --destructive-foreground: oklch(0.9 0 0); /* Light text on destructive */
+  --border: oklch(0.25 0 0); /* Dark grey borders */
+  --input: oklch(0.25 0 0); /* Dark grey inputs */
+  --ring: oklch(0.8 0.15 85); /* Yellow focus ring */
+  --chart-1: oklch(0.6 0.15 260);
+  --chart-2: oklch(0.7 0.12 160);
+  --chart-3: oklch(0.8 0.15 85);
+  --chart-4: oklch(0.65 0.2 300);
+  --chart-5: oklch(0.7 0.18 15);
+  --sidebar: oklch(0.2 0 0);
+  --sidebar-foreground: oklch(0.9 0 0);
+  --sidebar-primary: oklch(0.6 0.15 260);
+  --sidebar-primary-foreground: oklch(0.9 0 0);
+  --sidebar-accent: oklch(0.25 0 0);
+  --sidebar-accent-foreground: oklch(0.9 0 0);
+  --sidebar-border: oklch(0.25 0 0);
+  --sidebar-ring: oklch(0.5 0 0);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .pixel-border {
+    border-style: solid;
+    border-width: 2px;
+    border-color: hsl(var(--border));
+    box-shadow: inset 1px 1px 0 hsl(var(--background)), inset -1px -1px 0 hsl(var(--muted));
+  }
+
+  .pixel-border-inset {
+    border-style: solid;
+    border-width: 2px;
+    border-color: hsl(var(--muted));
+    box-shadow: inset -1px -1px 0 hsl(var(--background)), inset 1px 1px 0 hsl(var(--border));
+  }
+
+  .pixel-button {
+    /* Using individual properties instead of @apply for better compatibility */
+    border-style: solid;
+    border-width: 2px;
+    border-color: hsl(var(--border));
+    box-shadow: inset 1px 1px 0 hsl(var(--background)), inset -1px -1px 0 hsl(var(--muted));
+    background-color: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+    transition: none;
+    /* Added mobile-friendly touch targets */
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+  }
+
+  .pixel-button:hover {
+    background-color: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+  }
+
+  .pixel-button:active {
+    border-color: hsl(var(--muted));
+    box-shadow: inset -1px -1px 0 hsl(var(--background)), inset 1px 1px 0 hsl(var(--border));
+  }
+
+  .retro-font {
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+  }
+
+  /* Added mobile-specific utilities */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+  }
+
+  .mobile-safe-area {
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-top: env(safe-area-inset-top);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  .focus-visible-ring {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* Improved mobile responsiveness */
+  @media (max-width: 640px) {
+    .desktop-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      padding: 1rem;
+    }
+
+    .mobile-text-lg {
+      font-size: 1.125rem;
+      line-height: 1.75rem;
+    }
+
+    .mobile-spacing {
+      padding: 0.75rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .desktop-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      padding: 0.75rem;
+    }
+  }
+}
