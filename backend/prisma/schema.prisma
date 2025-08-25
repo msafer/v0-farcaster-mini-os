@@ -1,0 +1,180 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                     String   @id @default(cuid())
+  fid                    Int      @unique // Farcaster ID
+  fname                  String   // Farcaster username
+  wallets                String[] // Array of wallet addresses
+  lensProfile            String?  // Lens profile handle
+  creditsBalanceCents    Int      @default(0)
+  freeImageUsedOn        DateTime?
+  freeLikeUsedOn         DateTime?
+  joinedAt               DateTime @default(now())
+  lastRerollAt           DateTime?
+  
+  // Relations
+  posts                  Post[]
+  postLikes              PostLike[]
+  notes                  Note[]
+  taskCompletions        TaskCompletion[]
+  eligibilities          Eligibility[]
+  chatMessages           ChatMessage[]
+  creditsLedger          CreditsLedger[]
+  reportsSubmitted       Report[] @relation("ReportsSubmitted")
+  
+  @@map("users")
+}
+
+model Post {
+  id                String     @id @default(cuid())
+  userId            String
+  imageUrl          String
+  promptTag         String?
+  createdAtUtc      DateTime   @default(now())
+  likeCountPublic   Int        @default(0)
+  
+  // Relations
+  user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes             PostLike[]
+  
+  @@index([createdAtUtc])
+  @@index([userId, createdAtUtc])
+  @@map("posts")
+}
+
+model PostLike {
+  id         String   @id @default(cuid())
+  postId     String
+  userId     String
+  createdAt  DateTime @default(now())
+  
+  // Relations
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([postId, userId])
+  @@map("post_likes")
+}
+
+model Note {
+  id           String   @id @default(cuid())
+  userId       String
+  entryNumber  Int      // Auto-incremented per user
+  bodyMd       String
+  createdAt    DateTime @default(now())
+  isPublic     Boolean  @default(true)
+  
+  // Relations
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, entryNumber])
+  @@index([userId, createdAt])
+  @@map("notes")
+}
+
+model DailyTask {
+  id         String   @id @default(cuid())
+  dateUtc    DateTime @unique @db.Date
+  tasksJson  Json     // Array of task objects
+  
+  // Relations
+  completions TaskCompletion[]
+  
+  @@map("daily_tasks")
+}
+
+model TaskCompletion {
+  id          String    @id @default(cuid())
+  taskId      String    // ID from the tasks JSON
+  userId      String
+  dailyTaskId String
+  completedAt DateTime  @default(now())
+  
+  // Relations
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dailyTask   DailyTask @relation(fields: [dailyTaskId], references: [id], onDelete: Cascade)
+  
+  @@unique([taskId, userId, dailyTaskId])
+  @@map("task_completions")
+}
+
+model Eligibility {
+  id         String   @id @default(cuid())
+  dateUtc    DateTime @db.Date
+  userId     String
+  isEligible Boolean  @default(true)
+  
+  // Relations
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([dateUtc, userId])
+  @@map("eligibilities")
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  room      String
+  userId    String
+  text      String   // Max 180 chars, text + emoji only
+  createdAt DateTime @default(now())
+  
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([room, createdAt])
+  @@map("chat_messages")
+}
+
+model CreditsLedger {
+  id        String   @id @default(cuid())
+  userId    String
+  deltaCents Int     // Positive for credits added, negative for charges
+  reason    String  // e.g., "post_image", "like_post", "reroll_search", "task_completion"
+  meta      Json?   // Additional metadata
+  createdAt DateTime @default(now())
+  
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId, createdAt])
+  @@map("credits_ledger")
+}
+
+model Report {
+  id         String   @id @default(cuid())
+  reporterId String
+  targetType String   // "post", "user", "chat_message"
+  targetId   String   // ID of the reported content
+  reason     String
+  status     String   @default("pending") // "pending", "reviewed", "dismissed"
+  createdAt  DateTime @default(now())
+  reviewedAt DateTime?
+  
+  // Relations
+  reporter   User     @relation("ReportsSubmitted", fields: [reporterId], references: [id], onDelete: Cascade)
+  
+  @@index([targetType, targetId])
+  @@index([status])
+  @@index([reporterId])
+  @@map("reports")
+}
+
+model Treasury {
+  id           String   @id @default(cuid())
+  totalCredits BigInt   @default(0)
+  totalPosts   Int      @default(0)
+  totalUsers   Int      @default(0)
+  lastUpdated  DateTime @default(now())
+  
+  @@map("treasury")
+}
