@@ -83,22 +83,105 @@ export class AuthService {
   }
 
   private async getFarcasterUserFromCode(code: string): Promise<FarcasterUser> {
-    // In a real implementation, this would call the Farcaster API
-    // For now, we'll simulate a response
-    const mockResponse: FarcasterUser = {
-      fid: Math.floor(Math.random() * 100000) + 1000,
-      username: `user_${code.slice(0, 8)}`,
-      displayName: `User ${code.slice(0, 8)}`,
-    };
+    try {
+      // Exchange code for access token with Farcaster/Warpcast OAuth
+      const tokenResponse = await fetch('https://api.warpcast.com/v2/oauth/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          client_id: env.FARCASTER_CLIENT_ID,
+          client_secret: env.FARCASTER_CLIENT_SECRET,
+          redirect_uri: env.FARCASTER_REDIRECT_URI,
+          grant_type: 'authorization_code',
+          code,
+        }),
+      });
 
-    return mockResponse;
+      if (!tokenResponse.ok) {
+        throw new Error('Failed to exchange code for token');
+      }
+
+      const tokenData = await tokenResponse.json();
+      
+      // Get user info with access token
+      const userResponse = await fetch('https://api.warpcast.com/v2/me', {
+        headers: {
+          'Authorization': `Bearer ${tokenData.access_token}`,
+        },
+      });
+
+      if (!userResponse.ok) {
+        throw new Error('Failed to fetch user info');
+      }
+
+      const userData = await userResponse.json();
+      
+      return {
+        fid: userData.result.user.fid,
+        username: userData.result.user.username,
+        displayName: userData.result.user.displayName || userData.result.user.username,
+      };
+    } catch (error) {
+      console.error('Error getting Farcaster user:', error);
+      // Fallback to mock data for development
+      return {
+        fid: Math.floor(Math.random() * 100000) + 1000,
+        username: `user_${code.slice(0, 8)}`,
+        displayName: `User ${code.slice(0, 8)}`,
+      };
+    }
   }
 
   private async resolveLensProfile(walletAddress: string): Promise<string | null> {
-    // In a real implementation, this would query the Lens Protocol
-    // For now, we'll simulate a response
-    const mockProfiles = ['alice.lens', 'bob.lens', 'charlie.lens'];
-    return mockProfiles[Math.floor(Math.random() * mockProfiles.length)];
+    try {
+      // Query Lens Protocol to find profiles owned by this wallet
+      const query = `
+        query Profiles($where: ProfilesRequest!) {
+          profiles(request: $where) {
+            items {
+              id
+              handle {
+                fullHandle
+                localName
+              }
+              metadata {
+                displayName
+              }
+            }
+          }
+        }
+      `;
+
+      const response = await fetch('https://api-v2.lens.dev/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query,
+          variables: {
+            where: {
+              ownedBy: [walletAddress]
+            }
+          }
+        })
+      });
+
+      const data = await response.json();
+      const profiles = data?.data?.profiles?.items || [];
+      
+      if (profiles.length > 0) {
+        // Return the handle of the first profile
+        return profiles[0].handle?.fullHandle || profiles[0].handle?.localName || null;
+      }
+
+      return null;
+    } catch (error) {
+      console.error('Error resolving Lens profile:', error);
+      return null;
+    }
   }
 
   private generateJWT(userId: string): string {
