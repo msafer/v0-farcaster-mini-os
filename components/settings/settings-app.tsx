@@ -2,13 +2,12 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/pixel95/button"
+import { SimpleWalletConnect } from "@/components/simple-wallet-connect"
 
 export function SettingsApp() {
   const [accentColor, setAccentColor] = useState("#fbbf24")
   const [notifications, setNotifications] = useState(true)
   const [privacy, setPrivacy] = useState("public")
-  const [isConnected, setIsConnected] = useState(false)
-
   const colors = [
     "#fbbf24", // yellow
     "#3b82f6", // blue
@@ -33,34 +32,6 @@ export function SettingsApp() {
       setAccentColor(savedColor)
     }
   }, [])
-
-  const handleConnectWallet = () => {
-    console.log("[v0] Simulating wallet connection...")
-    const walletTypes = ["MetaMask", "WalletConnect", "Coinbase Wallet"]
-    const randomWallet = walletTypes[Math.floor(Math.random() * walletTypes.length)]
-
-    setIsConnected(true)
-    setTimeout(() => {
-      alert(`${randomWallet} connected! (Simulated)\n\nAddress: 0x742d...3f8a`)
-    }, 1000)
-  }
-
-  const handleLinkLens = () => {
-    console.log("[v0] Simulating Lens profile linking...")
-    const confirmed = confirm(
-      "🌿 Connect to Lens Protocol?\n\n" +
-        "This will:\n" +
-        "• Open your Web3 wallet\n" +
-        "• Request signature for profile verification\n" +
-        "• Link your Lens handle to Snel OS\n\n" +
-        "Continue?",
-    )
-    if (confirmed) {
-      setTimeout(() => {
-        alert("🌿 Lens Profile Linked!\n\nHandle: @sneluser.lens\nProfile verified ✓")
-      }, 1500)
-    }
-  }
 
   return (
     <div className="h-full bg-gray-200 p-4">
@@ -114,14 +85,9 @@ export function SettingsApp() {
           </div>
 
           <div>
-            <h3 className="font-semibold mb-2 text-black">Wallet & Profile</h3>
-            <div className="space-y-2">
-              <Button onClick={handleConnectWallet} className="w-full touch-target">
-                {isConnected ? "✓ Wallet Connected" : "🏦 Connect Wallet"}
-              </Button>
-              <Button onClick={handleLinkLens} className="w-full touch-target">
-                🌿 Link Lens Profile
-              </Button>
+            <h3 className="font-semibold mb-2 text-black">Wallet & Authentication</h3>
+            <div className="bg-gray-50 p-3 pixel-border">
+              <SimpleWalletConnect />
             </div>
           </div>
         </div>

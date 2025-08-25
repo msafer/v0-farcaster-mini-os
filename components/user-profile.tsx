@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { SimpleWalletConnect } from "@/components/simple-wallet-connect"
+// Wallet connections moved to Settings app
 
 interface UserStats {
   currentStreak: number
@@ -75,10 +75,12 @@ export function UserProfile() {
 
   return (
     <div className="space-y-4">
-      {/* Authentication & Wallet Connection */}
+      {/* Quick Info */}
       <div className="pixel-border bg-secondary p-4">
-        <h3 className="retro-font text-lg mb-3">Connect & Authenticate</h3>
-        <SimpleWalletConnect />
+        <h3 className="retro-font text-lg mb-3">Quick Info</h3>
+        <p className="text-sm text-muted-foreground">
+          For wallet connections and authentication, visit the Settings app.
+        </p>
       </div>
 
       <div className="pixel-border bg-secondary p-4">
