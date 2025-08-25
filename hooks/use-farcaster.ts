@@ -1,8 +1,8 @@
-'use client'
+"use client"
 
-import { useSignIn, useProfile } from '@farcaster/auth-kit'
-import { useState, useEffect } from 'react'
-import { BACKEND_URL } from '@/config/services'
+import { useSignIn, useProfile } from "@farcaster/auth-kit"
+import { useState, useEffect } from "react"
+import { BACKEND_URL } from "@/config/client-services"
 
 export function useFarcaster() {
   const { isAuthenticated, profile } = useProfile()
@@ -13,8 +13,8 @@ export function useFarcaster() {
 
   // Load auth token from localStorage on mount
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('snel_auth_token')
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("snel_auth_token")
       setAuthToken(token)
     }
   }, [])
@@ -35,9 +35,9 @@ export function useFarcaster() {
     try {
       // Send the Farcaster auth data to our backend
       const response = await fetch(`${BACKEND_URL}/auth/fc/callback`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           fid: profile.fid,
@@ -46,23 +46,22 @@ export function useFarcaster() {
           pfpUrl: profile.pfpUrl,
           bio: profile.bio,
           signature: signInHook.data,
-          message: signInHook.message
+          message: signInHook.message,
         }),
       })
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error || 'Backend authentication failed')
+        throw new Error(errorData.error || "Backend authentication failed")
       }
 
       const data = await response.json()
-      
+
       // Store the backend auth token
       setAuthToken(data.token)
-      localStorage.setItem('snel_auth_token', data.token)
-      
+      localStorage.setItem("snel_auth_token", data.token)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Authentication failed')
+      setError(err instanceof Error ? err.message : "Authentication failed")
     } finally {
       setIsLoading(false)
     }
@@ -71,20 +70,20 @@ export function useFarcaster() {
   const signOut = () => {
     signInHook.signOut()
     setAuthToken(null)
-    localStorage.removeItem('snel_auth_token')
+    localStorage.removeItem("snel_auth_token")
     setError(null)
   }
 
   const makeAuthenticatedRequest = async (url: string, options: RequestInit = {}) => {
     if (!authToken) {
-      throw new Error('Not authenticated')
+      throw new Error("Not authenticated")
     }
 
     return fetch(url, {
       ...options,
       headers: {
         ...options.headers,
-        'Authorization': `Bearer ${authToken}`,
+        Authorization: `Bearer ${authToken}`,
       },
     })
   }

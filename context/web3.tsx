@@ -1,61 +1,47 @@
-'use client'
+"use client"
 
-import { wagmiAdapter, projectId } from '@/config/wagmi'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { createAppKit } from '@reown/appkit/react'
-import { mainnet, arbitrum, base, scroll, polygon } from '@reown/appkit/networks'
-import React, { type ReactNode } from 'react'
-import { cookieToInitialState, WagmiProvider, type Config } from 'wagmi'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { createConfig, http, WagmiProvider } from "wagmi"
+import { mainnet, arbitrum, base, scroll, polygon } from "wagmi/chains"
+import { injected, walletConnect } from "wagmi/connectors"
+import type { ReactNode } from "react"
 
-// Set up queryClient
 const queryClient = new QueryClient()
 
-if (!projectId) {
-  throw new Error('Project ID is not defined')
-}
+const projectId = "4f196d627335b92874cb5b398121d116"
 
-// Set up metadata
-const metadata = {
-  name: 'Snel OS',
-  description: 'A decentralized social OS built on Farcaster and Lens',
-  url: 'https://snel-os.vercel.app', // Update with your actual domain
-  icons: ['https://avatars.githubusercontent.com/u/179229932']
-}
-
-// Create the modal
-const modal = createAppKit({
-  adapters: [wagmiAdapter],
-  projectId,
-  networks: [mainnet, arbitrum, base, scroll, polygon],
-  defaultNetwork: mainnet,
-  metadata: metadata,
-  features: {
-    analytics: true,
-    email: true,
-    socials: ['google', 'x', 'github', 'discord', 'apple'],
-    emailShowWallets: true
+const config = createConfig({
+  chains: [mainnet, arbitrum, base, scroll, polygon],
+  connectors: [
+    injected(),
+    walletConnect({
+      projectId,
+      metadata: {
+        name: "Snel OS",
+        description: "A decentralized social OS built on Farcaster and Lens",
+        url: typeof window !== "undefined" ? window.location.origin : "https://snel-os.vercel.app",
+        icons: ["https://avatars.githubusercontent.com/u/179229932"],
+      },
+    }),
+  ],
+  transports: {
+    [mainnet.id]: http(),
+    [arbitrum.id]: http(),
+    [base.id]: http(),
+    [scroll.id]: http(),
+    [polygon.id]: http(),
   },
-  themeMode: 'dark',
-  themeVariables: {
-    '--w3m-color-mix': '#00DCFF',
-    '--w3m-color-mix-strength': 20
-  }
 })
 
-function Web3ContextProvider({ 
-  children, 
-  cookies 
-}: { 
+function Web3ContextProvider({
+  children,
+}: {
   children: ReactNode
-  cookies: string | null 
+  cookies?: string | null
 }) {
-  const initialState = cookieToInitialState(wagmiAdapter.wagmiConfig as Config, cookies)
-
   return (
-    <WagmiProvider config={wagmiAdapter.wagmiConfig as Config} initialState={initialState}>
-      <QueryClientProvider client={queryClient}>
-        {children}
-      </QueryClientProvider>
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </WagmiProvider>
   )
 }

@@ -8,14 +8,14 @@ This document explains how to use the WalletConnect, Neynar (Farcaster), and Len
 
 Create a `.env.local` file in the root directory:
 
-```bash
+\`\`\`bash
 # Copy from .env.local.example
 cp .env.local.example .env.local
-```
+\`\`\`
 
 Then fill in your API keys:
 
-```env
+\`\`\`env
 # WalletConnect/Reown (Already configured)
 NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=4f196d627335b92874cb5b398121d116
 
@@ -28,13 +28,13 @@ NEXT_PUBLIC_FARCASTER_SIGNER_UUID=your_farcaster_signer_uuid
 
 # Backend API
 NEXT_PUBLIC_BACKEND_URL=http://localhost:3001
-```
+\`\`\`
 
 ### 2. Backend Setup
 
 Configure the backend with API keys in `backend/.env`:
 
-```env
+\`\`\`env
 # Neynar API
 NEYNAR_API_KEY=your_neynar_api_key
 
@@ -42,7 +42,7 @@ NEYNAR_API_KEY=your_neynar_api_key
 FARCASTER_CLIENT_ID=your_farcaster_client_id
 FARCASTER_CLIENT_SECRET=your_farcaster_client_secret
 FARCASTER_REDIRECT_URI=http://localhost:3000/auth/callback
-```
+\`\`\`
 
 ## 🔌 Integration Overview
 
@@ -71,16 +71,16 @@ FARCASTER_REDIRECT_URI=http://localhost:3000/auth/callback
 
 ### 1. Complete Integration Flow
 
-```tsx
+\`\`\`tsx
 import { SnelOSConnect } from '@/components/snel-os-connect'
 
 // Full integration with all three services
 <SnelOSConnect />
-```
+\`\`\`
 
 ### 2. Individual Components
 
-```tsx
+\`\`\`tsx
 // Wallet connection
 import { ConnectButton } from '@/components/wallet/connect-button'
 <ConnectButton />
@@ -92,11 +92,11 @@ import { FarcasterAuth } from '@/components/auth/farcaster-auth'
 // Lens profile linking
 import { LensProfileLink } from '@/components/lens/lens-profile-link'
 <LensProfileLink onLinked={(profile) => {}} />
-```
+\`\`\`
 
 ### 3. Hooks
 
-```tsx
+\`\`\`tsx
 import { useWallet } from '@/hooks/use-wallet'
 
 function MyComponent() {
@@ -120,13 +120,13 @@ function MyComponent() {
     signMessage
   } = useWallet()
 }
-```
+\`\`\`
 
 ## 📡 API Services
 
 ### Farcaster Service
 
-```tsx
+\`\`\`tsx
 import { farcasterService } from '@/lib/farcaster'
 
 // Get user by FID
@@ -146,11 +146,11 @@ const result = await farcasterService.publishCast(signerUuid, 'Hello Farcaster!'
 
 // Search users
 const users = await farcasterService.searchUsers('query')
-```
+\`\`\`
 
 ### Lens Service
 
-```tsx
+\`\`\`tsx
 import { lensService } from '@/lib/lens'
 
 // Get profile by handle
@@ -167,7 +167,7 @@ const feed = await lensService.getFeed()
 
 // Search profiles
 const profiles = await lensService.searchProfiles('query')
-```
+\`\`\`
 
 ## 🔑 Authentication Flow
 
@@ -186,10 +186,10 @@ The frontend automatically communicates with your backend:
 
 ### 3. Data Flow
 
-```
+\`\`\`
 Frontend Components → API Routes → Backend Services → Database
                                 ↘ External APIs (Neynar, Lens)
-```
+\`\`\`
 
 ## 🎨 UI Components
 
@@ -204,7 +204,7 @@ All components use your existing design system:
 
 ### WalletConnect Features
 
-```tsx
+\`\`\`tsx
 // In context/web3.tsx
 const modal = createAppKit({
   features: {
@@ -219,20 +219,20 @@ const modal = createAppKit({
     '--w3m-color-mix-strength': 20
   }
 })
-```
+\`\`\`
 
 ### Network Configuration
 
-```tsx
+\`\`\`tsx
 // In config/wagmi.ts
 export const networks = [mainnet, arbitrum, base, scroll, polygon]
-```
+\`\`\`
 
 ## 🚨 Error Handling
 
 All services include comprehensive error handling:
 
-```tsx
+\`\`\`tsx
 // Example error handling
 try {
   const result = await farcasterService.publishCast(signer, text)
@@ -242,7 +242,7 @@ try {
 } catch (error) {
   console.error('Service error:', error.message)
 }
-```
+\`\`\`
 
 ## 📖 API Documentation
 

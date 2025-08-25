@@ -19,19 +19,19 @@ This document explains the updated Farcaster integration using the official Auth
 ### 1. Environment Configuration
 
 **Frontend (`.env.local`):**
-```env
+\`\`\`env
 # Neynar API (configured with your key)
 NEXT_PUBLIC_NEYNAR_API_KEY=E72DB815-4C11-4191-B39B-66223FB06814
 
 # Backend
 NEXT_PUBLIC_BACKEND_URL=http://localhost:3001
-```
+\`\`\`
 
 **Backend (`backend/.env`):**
-```env
+\`\`\`env
 # Neynar API
 NEYNAR_API_KEY=E72DB815-4C11-4191-B39B-66223FB06814
-```
+\`\`\`
 
 ### 2. Updated Components
 
@@ -67,29 +67,29 @@ NEYNAR_API_KEY=E72DB815-4C11-4191-B39B-66223FB06814
 ## 🧩 Key Features
 
 ### **AuthKit Provider**
-```tsx
+\`\`\`tsx
 // Wraps entire app for Farcaster context
 <AuthKitContextProvider>
   {children}
 </AuthKitContextProvider>
-```
+\`\`\`
 
 ### **Automatic Profile Sync**
-```tsx
+\`\`\`tsx
 const { isAuthenticated, profile, authToken } = useFarcaster()
 
 // Backend automatically verifies with Neynar API
 // Falls back gracefully if API unavailable
-```
+\`\`\`
 
 ### **Mini App Detection**
-```tsx
+\`\`\`tsx
 const isInFarcasterApp = typeof window !== 'undefined' && 
   (window.parent !== window || navigator.userAgent.includes('Farcaster'))
-```
+\`\`\`
 
 ### **Seamless Backend Integration**
-```tsx
+\`\`\`tsx
 // AuthKit data sent to backend for verification
 await fetch('/api/auth/fc/callback', {
   body: JSON.stringify({
@@ -99,19 +99,19 @@ await fetch('/api/auth/fc/callback', {
     // ... other AuthKit data
   })
 })
-```
+\`\`\`
 
 ## 📋 Component API
 
 ### **`<FarcasterAuthKit />`**
-```tsx
+\`\`\`tsx
 interface FarcasterAuthKitProps {
   onAuthenticated?: (userData: any) => void
 }
-```
+\`\`\`
 
 ### **`useFarcaster()` Hook**
-```tsx
+\`\`\`tsx
 const {
   // Auth state
   isAuthenticated: boolean,
@@ -135,7 +135,7 @@ const {
   url: string,
   channelToken: string,
 } = useFarcaster()
-```
+\`\`\`
 
 ## 🔗 Integration Benefits
 
@@ -159,7 +159,7 @@ const {
 
 ## 🏗 Architecture
 
-```
+\`\`\`
 Farcaster Mini App / Web Browser
         ↓
   AuthKit Provider
@@ -177,21 +177,21 @@ Farcaster Mini App / Web Browser
   Database User Storage
         ↓
   JWT Token Return
-```
+\`\`\`
 
 ## 🎯 Usage Examples
 
 ### **Complete Integration:**
-```tsx
+\`\`\`tsx
 import { SnelOSConnectAuthKit } from '@/components/snel-os-connect-authkit'
 
 function App() {
   return <SnelOSConnectAuthKit />
 }
-```
+\`\`\`
 
 ### **Farcaster-Only Auth:**
-```tsx
+\`\`\`tsx
 import { FarcasterAuthKit } from '@/components/auth/farcaster-authkit'
 
 function LoginPage() {
@@ -204,10 +204,10 @@ function LoginPage() {
     />
   )
 }
-```
+\`\`\`
 
 ### **Authenticated Requests:**
-```tsx
+\`\`\`tsx
 function MyComponent() {
   const { makeAuthenticatedRequest } = useFarcaster()
   
@@ -218,7 +218,7 @@ function MyComponent() {
     })
   }
 }
-```
+\`\`\`
 
 ## 🚀 Deployment
 
