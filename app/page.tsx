@@ -252,10 +252,22 @@ export default function SnelOS() {
           {desktopIcons.map((icon) => (
             <button
               key={icon.id}
-              onClick={() => handleAppClick(icon.id)}
+              onClick={(e) => {
+                console.log("Mobile icon clicked:", icon.id);
+                e.preventDefault();
+                e.stopPropagation();
+                handleAppClick(icon.id);
+              }}
+              onTouchStart={(e) => {
+                console.log("Touch start:", icon.id);
+                e.preventDefault();
+                e.stopPropagation();
+                handleAppClick(icon.id);
+              }}
               onKeyDown={(e) => handleKeyDown(e, icon.id)}
-              className="flex flex-col items-center gap-2 p-3 touch-target focus:focus-visible-ring rounded pixel-border"
+              className="flex flex-col items-center gap-2 p-3 touch-target focus:focus-visible-ring rounded pixel-border bg-white"
               aria-label={`Open ${icon.name} application`}
+              style={{ touchAction: 'manipulation' }}
             >
               <div className="w-12 h-12 bg-secondary pixel-border flex items-center justify-center text-xl">
                 {icon.icon === "profile" && "👤"}

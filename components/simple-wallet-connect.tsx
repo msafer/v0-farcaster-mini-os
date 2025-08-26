@@ -4,7 +4,7 @@ import { useWallet } from '@/hooks/use-wallet'
 import { useFarcaster } from '@/hooks/use-farcaster'
 
 export function SimpleWalletConnect() {
-  const { isConnected, address, openWalletModal, disconnect } = useWallet()
+  const { isConnected, address, openWalletModal, disconnect, connect, connectors, isModalOpen, closeWalletModal } = useWallet()
   const { isAuthenticated, profile } = useFarcaster()
 
   const shortenAddress = (addr: string) => {
@@ -12,7 +12,7 @@ export function SimpleWalletConnect() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 relative">
       {/* Farcaster Auth Status */}
       <div className="p-4 pixel-border bg-secondary">
         <h3 className="retro-font text-lg mb-2">🎭 Farcaster</h3>
@@ -38,8 +38,20 @@ export function SimpleWalletConnect() {
               Connect your Web3 wallet for Lens linking and transactions
             </p>
             <button
-              onClick={openWalletModal}
-              className="w-full p-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors"
+              onClick={(e) => {
+                console.log("Connect wallet button clicked");
+                e.preventDefault();
+                e.stopPropagation();
+                openWalletModal();
+              }}
+              onTouchStart={(e) => {
+                console.log("Connect wallet touch start");
+                e.preventDefault();
+                e.stopPropagation();
+                openWalletModal();
+              }}
+              className="w-full p-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors touch-target"
+              style={{ touchAction: 'manipulation' }}
             >
               Connect Wallet
             </button>
@@ -90,6 +102,45 @@ export function SimpleWalletConnect() {
           </div>
         </div>
       </div>
+
+      {/* Wallet Connection Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 pixel-border max-w-sm w-full mx-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="retro-font text-lg">Connect Wallet</h3>
+              <button
+                onClick={closeWalletModal}
+                className="text-xl hover:text-red-500"
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="space-y-3">
+              {connectors.map((connector) => (
+                <button
+                  key={connector.id}
+                  onClick={() => {
+                    console.log("Connecting with:", connector.name);
+                    connect(connector.id);
+                  }}
+                  className="w-full p-3 text-left pixel-border bg-secondary hover:bg-accent transition-colors"
+                >
+                  <div className="font-medium">{connector.name}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {connector.type}
+                  </div>
+                </button>
+              ))}
+            </div>
+            
+            <div className="mt-4 text-xs text-muted-foreground">
+              By connecting a wallet, you agree to the Terms of Service and Privacy Policy.
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
