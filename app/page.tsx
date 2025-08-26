@@ -48,6 +48,7 @@ export default function SnelOS() {
   }>({ isOpen: false, position: { x: 0, y: 0 } })
   const [userRole] = useState<"admin" | "user">("user") // Mock user role
   const [walletType, setWalletType] = useState<"external" | "farcaster">("external")
+  const [showWelcome, setShowWelcome] = useState(true)
 
   useEffect(() => {
     const handleOpenApp = (event: CustomEvent) => {
@@ -272,18 +273,29 @@ export default function SnelOS() {
           ))}
         </div>
 
-        <div className="absolute bottom-24 left-2 right-2 sm:left-4 sm:right-4 bg-background/90 border-2 border-foreground p-3 sm:p-4 rounded pixel-border">
-          <h2 className="retro-font text-base sm:text-lg text-foreground mb-2">Welcome to Snel OS!</h2>
-          <p className="text-xs text-muted-foreground mb-2">
-            A retro mini operating system for Farcaster. Tap icons to open apps.
-          </p>
-          <div className="text-xs text-muted-foreground space-y-1">
-            <p>• Camera: Post one photo per day</p>
-            <p>• Mail: Complete daily quests</p>
-            <p>• Notes: Write in your diary</p>
-            <p>• Chat: Join AOL-style rooms</p>
+        {showWelcome && (
+          <div className="absolute top-4 left-2 right-2 sm:left-4 sm:right-4 bg-background/95 border-2 border-foreground p-3 sm:p-4 rounded pixel-border shadow-lg z-10">
+            <div className="flex justify-between items-start mb-2">
+              <h2 className="retro-font text-base sm:text-lg text-foreground">Welcome to Snel OS!</h2>
+              <button 
+                onClick={() => setShowWelcome(false)}
+                className="text-foreground hover:text-muted-foreground text-lg font-bold ml-2 pixel-border w-6 h-6 flex items-center justify-center bg-background"
+                aria-label="Close welcome message"
+              >
+                ×
+              </button>
+            </div>
+            <p className="text-xs text-muted-foreground mb-2">
+              A retro mini operating system for Farcaster. Tap icons to open apps.
+            </p>
+            <div className="text-xs text-muted-foreground space-y-1">
+              <p>• Camera: Post one photo per day</p>
+              <p>• Mail: Complete daily quests</p>
+              <p>• Notes: Write in your diary</p>
+              <p>• Chat: Join AOL-style rooms</p>
+            </div>
           </div>
-        </div>
+        )}
       </main>
 
       <ContextMenu
