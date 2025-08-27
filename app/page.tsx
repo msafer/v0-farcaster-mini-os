@@ -290,11 +290,23 @@ export default function SnelOS() {
             <div className="flex justify-between items-start mb-2">
               <h2 className="retro-font text-base sm:text-lg text-foreground">Welcome to Snel OS!</h2>
               <button 
-                onClick={() => setShowWelcome(false)}
-                className="text-foreground hover:text-muted-foreground text-lg font-bold ml-2 pixel-border w-6 h-6 flex items-center justify-center bg-background"
+                onClick={(e) => {
+                  console.log("Closing welcome modal");
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowWelcome(false);
+                }}
+                onTouchStart={(e) => {
+                  console.log("Touch start on close button");
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowWelcome(false);
+                }}
+                className="text-foreground hover:text-red-500 text-xl font-bold ml-2 pixel-border w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center bg-background touch-target"
+                style={{ touchAction: 'manipulation' }}
                 aria-label="Close welcome message"
               >
-                ×
+                ✕
               </button>
             </div>
             <p className="text-xs text-muted-foreground mb-2">

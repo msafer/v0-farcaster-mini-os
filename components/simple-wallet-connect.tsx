@@ -2,10 +2,43 @@
 
 import { useWallet } from '@/hooks/use-wallet'
 import { useFarcaster } from '@/hooks/use-farcaster'
+import { useState, useEffect } from 'react'
+import { lensService } from '@/lib/lens'
 
 export function SimpleWalletConnect() {
   const { isConnected, address, openWalletModal, disconnect, connect, connectors, isModalOpen, closeWalletModal } = useWallet()
   const { isAuthenticated, profile } = useFarcaster()
+  const [lensProfile, setLensProfile] = useState<any>(null)
+  const [lensLoading, setLensLoading] = useState(false)
+
+  // Fetch Lens profile when wallet is connected
+  useEffect(() => {
+    const fetchLensProfile = async () => {
+      if (isConnected && address) {
+        setLensLoading(true)
+        try {
+          console.log("Fetching Lens profiles for address:", address)
+          const profiles = await lensService.getProfilesByAddress(address)
+          if (profiles && profiles.length > 0) {
+            setLensProfile(profiles[0]) // Use the first profile
+            console.log("Found Lens profile:", profiles[0])
+          } else {
+            setLensProfile(null)
+            console.log("No Lens profiles found for this address")
+          }
+        } catch (error) {
+          console.error("Error fetching Lens profile:", error)
+          setLensProfile(null)
+        } finally {
+          setLensLoading(false)
+        }
+      } else {
+        setLensProfile(null)
+      }
+    }
+
+    fetchLensProfile()
+  }, [isConnected, address])
 
   const shortenAddress = (addr: string) => {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`
@@ -98,8 +131,26 @@ export function SimpleWalletConnect() {
           </div>
           <div className="flex justify-between">
             <span>Lens:</span>
-            <span className="text-gray-500">Coming soon</span>
+            <span className={lensProfile ? "text-green-600" : lensLoading ? "text-blue-600" : "text-gray-500"}>
+              {lensLoading ? "Loading..." : lensProfile ? `@${lensProfile.handle || lensProfile.localName}` : "No profile"}
+            </span>
           </div>
+          {lensProfile && (
+            <div className="mt-2 p-2 bg-green-50 pixel-border text-xs">
+              <div className="flex justify-between">
+                <span>Followers:</span>
+                <span className="font-medium">{lensProfile.stats?.followers || 0}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Following:</span>
+                <span className="font-medium">{lensProfile.stats?.following || 0}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Posts:</span>
+                <span className="font-medium">{lensProfile.stats?.posts || 0}</span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
