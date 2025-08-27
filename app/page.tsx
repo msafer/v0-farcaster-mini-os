@@ -169,10 +169,7 @@ export default function SnelOS() {
                       <p className="text-sm text-muted-foreground mb-4">
                         For Farcaster authentication, visit the Settings app.
                       </p>
-                      <Button
-                        onClick={() => handleAppClick("settings")}
-                        className="w-full"
-                      >
+                      <Button onClick={() => handleAppClick("settings")} className="w-full">
                         Go to Settings
                       </Button>
                     </div>
@@ -253,23 +250,23 @@ export default function SnelOS() {
             <button
               key={icon.id}
               onClick={(e) => {
-                console.log("Mobile icon clicked:", icon.id);
-                e.preventDefault();
-                e.stopPropagation();
-                handleAppClick(icon.id);
+                console.log("[v0] Mobile icon clicked:", icon.id)
+                handleAppClick(icon.id)
               }}
-              onTouchStart={(e) => {
-                console.log("Touch start:", icon.id);
-                e.preventDefault();
-                e.stopPropagation();
-                handleAppClick(icon.id);
+              onTouchEnd={(e) => {
+                console.log("[v0] Touch end:", icon.id)
+                handleAppClick(icon.id)
               }}
               onKeyDown={(e) => handleKeyDown(e, icon.id)}
-              className="flex flex-col items-center gap-2 p-3 touch-target focus:focus-visible-ring rounded pixel-border bg-white"
+              className="flex flex-col items-center gap-2 p-4 touch-target focus:focus-visible-ring rounded pixel-border bg-white active:bg-gray-100 transition-colors"
               aria-label={`Open ${icon.name} application`}
-              style={{ touchAction: 'manipulation' }}
+              style={{
+                touchAction: "manipulation",
+                minHeight: "80px",
+                minWidth: "80px",
+              }}
             >
-              <div className="w-12 h-12 bg-secondary pixel-border flex items-center justify-center text-xl">
+              <div className="w-12 h-12 bg-secondary pixel-border flex items-center justify-center text-xl pointer-events-none">
                 {icon.icon === "profile" && "👤"}
                 {icon.icon === "camera" && "📷"}
                 {icon.icon === "mail" && "📧"}
@@ -280,7 +277,7 @@ export default function SnelOS() {
                 {icon.icon === "wallet" && "🏦"}
                 {icon.icon === "folder" && "📁"}
               </div>
-              <span className="text-xs text-center retro-font">{icon.name}</span>
+              <span className="text-xs text-center retro-font pointer-events-none">{icon.name}</span>
             </button>
           ))}
         </div>
@@ -289,21 +286,17 @@ export default function SnelOS() {
           <div className="absolute top-4 left-2 right-2 sm:left-4 sm:right-4 bg-background/95 border-2 border-foreground p-3 sm:p-4 rounded pixel-border shadow-lg z-10">
             <div className="flex justify-between items-start mb-2">
               <h2 className="retro-font text-base sm:text-lg text-foreground">Welcome to Snel OS!</h2>
-              <button 
+              <button
                 onClick={(e) => {
-                  console.log("Closing welcome modal");
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setShowWelcome(false);
+                  console.log("[v0] Closing welcome modal")
+                  setShowWelcome(false)
                 }}
-                onTouchStart={(e) => {
-                  console.log("Touch start on close button");
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setShowWelcome(false);
+                onTouchEnd={(e) => {
+                  console.log("[v0] Touch end on close button")
+                  setShowWelcome(false)
                 }}
-                className="text-foreground hover:text-red-500 text-xl font-bold ml-2 pixel-border w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center bg-background touch-target"
-                style={{ touchAction: 'manipulation' }}
+                className="text-foreground hover:text-red-500 active:text-red-600 text-xl font-bold ml-2 pixel-border w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center bg-background touch-target transition-colors"
+                style={{ touchAction: "manipulation" }}
                 aria-label="Close welcome message"
               >
                 ✕
