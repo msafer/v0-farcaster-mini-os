@@ -250,20 +250,28 @@ export default function SnelOS() {
             <button
               key={icon.id}
               onClick={(e) => {
+                e.stopPropagation()
                 console.log("[v0] Mobile icon clicked:", icon.id)
                 handleAppClick(icon.id)
               }}
-              onTouchEnd={(e) => {
-                console.log("[v0] Touch end:", icon.id)
-                handleAppClick(icon.id)
+              onPointerDown={(e) => {
+                console.log("[v0] Pointer down:", icon.id)
+                e.currentTarget.style.transform = "scale(0.95)"
+              }}
+              onPointerUp={(e) => {
+                console.log("[v0] Pointer up:", icon.id)
+                e.currentTarget.style.transform = "scale(1)"
               }}
               onKeyDown={(e) => handleKeyDown(e, icon.id)}
-              className="flex flex-col items-center gap-2 p-4 touch-target focus:focus-visible-ring rounded pixel-border bg-white active:bg-gray-100 transition-colors"
+              className="flex flex-col items-center gap-2 p-4 touch-target focus:focus-visible-ring rounded pixel-border bg-white hover:bg-gray-50 active:bg-gray-100 transition-all duration-150"
               aria-label={`Open ${icon.name} application`}
               style={{
                 touchAction: "manipulation",
-                minHeight: "80px",
-                minWidth: "80px",
+                minHeight: "88px",
+                minWidth: "88px",
+                userSelect: "none",
+                WebkitUserSelect: "none",
+                WebkitTapHighlightColor: "transparent",
               }}
             >
               <div className="w-12 h-12 bg-secondary pixel-border flex items-center justify-center text-xl pointer-events-none">
@@ -288,15 +296,17 @@ export default function SnelOS() {
               <h2 className="retro-font text-base sm:text-lg text-foreground">Welcome to Snel OS!</h2>
               <button
                 onClick={(e) => {
+                  e.stopPropagation()
                   console.log("[v0] Closing welcome modal")
                   setShowWelcome(false)
                 }}
-                onTouchEnd={(e) => {
-                  console.log("[v0] Touch end on close button")
-                  setShowWelcome(false)
-                }}
                 className="text-foreground hover:text-red-500 active:text-red-600 text-xl font-bold ml-2 pixel-border w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center bg-background touch-target transition-colors"
-                style={{ touchAction: "manipulation" }}
+                style={{
+                  touchAction: "manipulation",
+                  userSelect: "none",
+                  WebkitUserSelect: "none",
+                  WebkitTapHighlightColor: "transparent",
+                }}
                 aria-label="Close welcome message"
               >
                 ✕
